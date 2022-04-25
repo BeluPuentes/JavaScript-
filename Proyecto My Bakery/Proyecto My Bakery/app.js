@@ -12,6 +12,17 @@ const productsDOM = document.querySelector('.products-center');
 let cart = []; 
 let buttonsDOM =[];
 
+function clearCart(){
+    let cartItems = cart.map(item => item.id);
+    cartItems.forEach(id => this.removeItem(id))
+    while(cartContent.children.length>0){
+       
+        cartContent.removeChild(cartContent.children[0])
+    }
+    this.hideCart(); 
+}
+
+
 
 class Products {
     async getProducts(){
@@ -134,13 +145,13 @@ class UI{
     }
 
     cartLogic(){
-        if(clearCartBtn)
+       /* if(clearCartBtn)
         {
             clearCartBtn.addEventListener('click', ()=>{
                 this.clearCart();
               
             }) 
-        }
+        }*/
 
         cartContent.addEventListener('click', event =>{
             if(event.target.classList.contains ('remove-item'))
@@ -201,7 +212,7 @@ class UI{
         })
     }
 
-    clearCart(){
+   /* clearCart(){
         let cartItems = cart.map(item => item.id);
         cartItems.forEach(id => this.removeItem(id))
         while(cartContent.children.length>0){
@@ -209,7 +220,9 @@ class UI{
             cartContent.removeChild(cartContent.children[0])
         }
         this.hideCart(); 
-    }
+    }*/
+
+    
 
     removeItem(id){
         cart = cart.filter (item => item.id !==id);
@@ -224,13 +237,14 @@ class UI{
         return buttonsDOM.find(button => button.dataset.id === id);
     }
    
-    comprar(){
-        const btnComprar = document.querySelector('.comprar-cart')
-        btnComprar.addEventListener('click',()=>checkPago())
-        this.clearCart()
-    }
 
 }
+
+const btnComprar = document.querySelector('.comprar-cart')
+btnComprar.addEventListener('click',()=>checkPago())
+
+
+
 
 class Storage{
     static saveProducts(products){
@@ -266,10 +280,16 @@ document.addEventListener("DOMContentLoaded", ()=>{
 })
 
 function checkPago(){
-    let cartPrice = cart.map(item => item.price)
+    let tempTotal=0; 
+    let itemsTotal=0; 
+        cart.map(item =>{
+            tempTotal += item.price * item.amount;
+            itemsTotal += item.amount 
+        })
     Swal.fire({
         title: 'El pago ha sido procesado con EXITO!',
-        text: `${cartPrice}`,
+        text: `El total fue de:$${tempTotal} `,
         icon:'success'
     })
+    this.clearCart()
 }
